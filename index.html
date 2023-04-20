@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <title>Kacper Zubrzyński</title>
+    <style>
+        :root {
+            font-size: 16px;
+            --accent-clr-values: 255, 145, 0;
+
+            --main-clr: rgb(223, 223, 223);
+            --secondary-clr: rgb(45, 45, 45);
+            --accent-clr: rgb(var(--accent-clr-values));
+
+            --bg-clr: var(--main-clr);
+            --text-clr: black;
+
+            --error-clr: red;
+            --ok-clr: green;
+            --neutral-clr: gray;
+            --neutral-clr-darker: rgb(85, 85, 85);
+        }
+        /* * {
+            outline: 2px solid black;
+        } */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 1rem;
+            background-color: var(--bg-clr);
+            color: var(--text-clr);
+
+            margin: 0;
+            height: 100vh;
+            width: 100vw;
+            box-sizing: border-box;
+
+            display: grid;
+            grid-template-rows: auto 1fr;
+            
+
+        }
+        .darktheme {
+            --main-clr: rgb(35, 35, 35);
+            --secondary-clr: rgb(140, 140, 140);
+
+            --bg-clr: var(--main-clr);
+            --text-clr: white;
+
+            --error-clr: red;
+            --ok-clr: green;
+            --neutral-clr: gray;
+            --neutral-clr-darker: rgb(85, 85, 85);
+        }
+
+        .pl {
+            display: inline-block;
+        }
+        .eng {
+            display: none;
+        }
+
+        .grid {
+            display: grid;
+        }
+        /* NAV */
+        nav {
+            display: flex;
+            align-items: center;
+            padding: 5px;
+            padding-left: 5px;
+            box-shadow: 0 1px 0 var(--secondary-clr);
+        }
+        nav > * {
+            padding: 12px 15px;
+            font-size: 0.7rem;
+        }
+        .nav-buttons {
+            display: flex;
+            margin-right: auto;
+            padding-left: 0;
+        }
+        nav button {
+            font-size: 0.7rem;
+            margin-left: 9px;
+        }
+
+        nav label {
+            cursor: pointer;
+            border-radius: 50%;
+            color: var(--secondary-clr);
+        }
+        .label-wrapper {
+            width: 1rem;
+            height: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            overflow: hidden;
+            position: relative;
+            opacity: 0.8;
+        }
+        #language .label-wrapper {
+            margin-left: auto;
+        }
+        .label-wrapper:focus {
+            outline: none;
+            opacity: 1;
+        }
+        nav input {
+            display: none;
+        }
+        
+        #theme-sun {
+            height: 0.7rem;
+            width: 0.7rem;
+            background-color: var(--secondary-clr);
+            border: 2px solid var(--secondary-clr);
+            border-radius: 50%;
+        }
+        #theme-moon {
+            position: absolute;
+            height: 0.63rem;
+            width: 0.63rem;
+            background-color: var(--bg-clr);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+
+        .flex-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .grid-column {
+            display: grid;
+
+        }
+        .grid-row {
+            display: grid;
+            gap: 15px;
+            
+        }
+        /* BUTTONS */
+        button {
+            padding: 8px 15px;
+            background-color: var(--secondary-clr);
+            color: var(--bg-clr);
+            cursor: pointer;
+            font-size: 1rem;
+
+            border: 2px solid var(--bg-clr);
+            border-radius: 10px;
+        }
+        button:focus {
+            outline: 3px solid var(--bg-clr);
+            outline-offset: -6px;
+        }
+        .disabled {
+            opacity: 60%;
+            cursor: default;
+        }
+        .disabled:focus {
+            opacity: 60%;
+            cursor: default;
+            outline: none;
+        }
+
+        /* CONTENT CONTAINER */
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* FORM */
+        h2 {
+            margin-top: 0;
+        }
+        form {
+            display: grid;
+        }
+        .form-field {
+            display: grid;
+
+            grid-template-columns: 7pc 1fr;
+            column-gap: 15px;
+            width: 80%;
+            margin-bottom: 15px;
+        }
+        .form-field:hover {
+            z-index: 10000;
+        }
+        form label {
+            display: flex;
+            align-items: center;
+        }
+        form label span{
+            font-size: 0.8rem;
+            /* line-height: 150%; */
+        }
+        input {
+            font-size: 0.7rem;
+           padding-right: 1.2rem;
+           width: min(200px, calc(100vw - calc(15px + 10pc)));
+        }
+
+        /* tooltip */
+        .wrapper-input-tooltip {
+            position: relative;
+        }
+        .tooltipIcon {
+            position: absolute;
+            cursor: default;
+            color: white;
+            font-size: 0.7rem;
+            text-align: center;
+            background-color: var(--neutral-clr);
+            height: 0.8rem;
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            
+            top: 0.65rem;
+            right: 0;
+            transform: translate(-40%, -50%);
+        }
+        .tooltip-container {
+            visibility: hidden;
+            position: absolute;
+            display: grid;
+            gap:1rem;
+
+            padding: 7px 10px;
+            text-align: left;
+            color: white;
+            width: 300px;
+            border-radius: 5px;
+
+            top: calc(100% + 15px);
+            right: 7px;
+            background-color: var(--neutral-clr-darker);
+        }
+        .tooltip-container::before {
+            content: "";
+            position: absolute;
+            z-index: -1;
+
+            border: 18px solid transparent;
+            border-right-width: 0;
+            border-bottom-color: var(--neutral-clr-darker) ;
+            top:-30px;
+            right: 0;
+        }
+
+
+        .tooltipIcon.ok {
+            line-height: 0.85rem;
+        }
+        .error-msg {
+            grid-column: span 2;
+            color: var(--error-clr);
+            font-size: 0.7rem;
+        }
+        /* LOGGED VIEW */
+        h3 {
+            margin-bottom: 0;
+            padding-left: 5px;
+            color: var(--neutral-clr);
+        }
+        .transaction-cell {
+            background-color: var(--neutral-clr);
+            border-radius: 4px;
+            margin: 5px;
+            padding: 5px;
+            font-size: min(0.8rem, 3vw );
+            display: grid;
+            grid-template-columns: 1fr auto repeat(3, 1fr);
+            min-height: min(4rem, 15vw );
+            grid-template-areas: "date icon amount balance description description";
+            gap: 5px;
+        }
+        .transaction-cell > * {
+            border-right: 2px solid var(--neutral-clr-darker);
+        }
+        .icon {
+            grid-area: icon;
+            aspect-ratio: 1/1;
+            height: min(3rem, 11vw );
+            transform: translateX(-5px);
+        }
+        .date {
+            grid-area: date;
+        }
+        .type {
+            grid-area: type;
+            color: var(--bg-clr);
+            text-align: right;
+            font-size: 0.6rem;
+        }
+        .amount {
+            grid-area: amount;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        .balance {
+            grid-area: balance;
+        }
+        .description {
+            grid-area: description;
+            grid-template-rows: auto 0.7rem;
+            border-color: transparent;
+        }
+
+        .desktop-hidden {
+            display: none;
+        }
+        div:focus {
+            opacity: 0.9;
+            outline: 2px solid black;
+        }
+
+
+        .error {
+            color: var(--error-clr);
+        }
+        .ok {
+            background-color: var(--ok-clr);
+        }
+        .ok-text {
+            color: var(--neutral-clr);
+        }
+
+        .logged-window {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto 30vh 1fr;
+            
+            width: min(calc(100vw - 30px), 1115px);
+            height: calc(100vh - calc(30px + calc(35px + 1rem)));
+        }
+        .chart-button {
+            background-color: transparent;
+            border: 1px solid transparent;
+            border-radius: 0 0 5px 5px;
+            border-top: transparent;
+            text-align: center;
+            user-select: none;
+            font-size: 0.7rem;
+            padding: 0.15rem 0 0.3rem 0;
+            opacity: 0.5;
+        }
+
+        .chart1, .chart2 {
+            position: relative;
+        }
+        canvas {
+            /* background-color: white; */
+            position: relative;
+            width: 90% !important;
+        }
+        .history-window {
+            grid-column: span 2;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            border-top: 1px solid var(--secondary-clr);
+        }
+        /* MOBILE */
+        @media screen and (max-width: 768px) {
+            .mobile-hidden {
+                display: none;
+            }
+            .desktop-hidden {
+                display: block;
+            }
+            .logged-window {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: auto min( 60vw, 300px) 1fr;
+
+                width: min(calc(100vw - 30px), 2000px);
+                height: calc(100vh - calc(30px + calc(35px + 1rem)));
+                overflow: hidden;
+                /* width: 90vw; */
+            }
+            .chart-button {
+                font-size: 0.5rem;
+            }
+            .chart1, .chart2 {
+                transform: translate(-50%, -50%);
+                width: 180%;
+            }
+            .chart1 {
+                top: 50%;
+                left: 95%;
+                transition-duration: 0.5s;
+            }
+            .chart2 {
+                top: 50%;
+                left: -5%;
+                transition-duration: 0.5s;
+            }
+            .chart1.hide {
+                left: 0;
+                opacity: 0;
+                scale: 0.8;
+                z-index: -1;
+            }
+            .chart2.hide{
+                left: 100%;
+                opacity: 0;
+                scale: 0.8;
+                z-index: -1;
+            }
+            .active {
+                border-color: var(--secondary-clr);
+                opacity: 1;
+            }
+            .transaction-cell {
+                grid-template-columns: auto repeat(3, 1fr);
+                min-height: min(3rem, 11vw );
+                grid-template-areas: "icon description description amount";
+                gap: 5px;
+            }
+            .description {
+                border-color: var(--neutral-clr-darker);
+            }
+            .amount, .balance, .date {
+                border-color: transparent;
+            }
+            .type {
+                padding-right: 10px;
+            }
+            .transaction-cell:focus {
+                grid-template-areas:    "icon   description description amount"
+                                        ".      date        date        balance";
+            }
+            .transaction-cell:focus .mobile-hidden{
+                display: block;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-buttons">
+            <button id="login" tabindex="0">
+                <span class="pl">Zaloguj</span>
+                <span class="eng">Login</span>
+            </button>
+            <button id="register" tabindex="0">
+                <span class="pl">Rejestracja</span>
+                <span class="eng">Register</span>
+            </button>
+            <button id="logout" tabindex="0">
+                <span class="pl">Wyloguj</span>
+                <span class="eng">Log out</span>
+            </button>
+        </div>
+
+        <input type="checkbox" name="language" id="language" checked="checked">
+        <div class="label-wrapper" tabindex="0">
+            <label for="language" class="pl" >PL</label>
+            <label for="language" class="eng">ENG</label>
+        </div>
+        <input type="checkbox" name="theme" id="theme" checked="checked">
+        <div class="label-wrapper" tabindex="0">
+        <label for="theme">   
+            <div id="theme-sun"></div>
+            <div id="theme-moon"></div>
+        </label>
+        </div>
+
+    </nav>
+    <div class="container">
+        <div id="contentLocation"></div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+
+
+        //language variables///////////////////////////////////////////////////////////////////////////
+        const transacationTypes = {
+            1: ["Wpływy - inne",
+                "Income - other"],
+            2: ["Wydatki - zakupy",
+                "Expenses - shopping"],
+            3: ["Wpływy - wynagrodzenie",
+                "Income - salary"],
+            4: ["Wydatki - inne",
+                "Expenses - other"]
+            }
+        const pl = {
+            blank: "",
+            login: "Logowanie",
+            register: "Rejestracja",
+
+            loginBtn: "Zaloguj",
+            signInBtn: "Zarejestuj",
+
+            userName: "Nazwa Użytkownika",
+            email: "Email",
+            userNameEmail: "Nazwa Użytkownika/email",
+            repeatEmail: "Powtórz email",
+            password: "Hasło",
+            
+
+            tipUser: [
+                "Maks 16 liter, cyfr i znaków - _ [ ] \ /",
+                "w tym przynajmniej 5 liter",
+                "i jedną cyfrę"
+            ],
+            tipPassword: [
+                "Musi zawirać 6 znaków"
+            ],
+            tipEmail: [
+                "Podaj swój adres email"
+                ],
+            errorMsgUser: "Ta nazwa jest już zajęta",
+            errorMsgEmail: "Podany adres jest już zajęty",
+
+            errorMsgLoginEmail: "Podany adres nie posiada konta, zachęcam założyć",
+            errorMsgLoginUserOrPassword: "Nieprawidłowa nazwa lub hasło",
+
+            chartCircleBtn: "Procentowy podział transakcji",
+            chartBarBtn: "Zestawienie salda",
+
+            description: "Opis: ",
+            date: "Data transakcji: ",
+            balance: "Saldo: ",
+            amount: "Kwota operacji: ",
+            type: "Typ operacji: "
+        }
+        const eng = {
+            blank: "",
+            login: "Log in",
+            register: "Register",
+
+            loginBtn: "Login",
+            signInBtn: "Sign in",
+
+            userName: "Username",
+            email: "Email",
+            userNameEmail: "Username/email",
+            repeatEmail: "Repeat email",
+            password: "Password",
+            
+
+            tipUser: [
+                "Max 16 letters, numbers and symbols - _ [ ] \ /",
+                "at lest 5 letters",
+                "and one number"
+            ],
+            tipPassword: [
+                "Needs to have at least 6 symbols"
+            ],
+            tipEmail: [
+                "Your email adress"
+            ],
+            errorMsgUser: "That username is already taken",
+            errorMsgEmail: "That email is already used. Do You want to log in?",
+
+            errorMsgLoginEmail: "There is no account with this email. You can make new account",
+            errorMsgLoginUserOrPassword: "Wrong username or password",
+
+            chartCircleBtn: "Percentage distribution of transactions",
+            chartBarBtn: "Balance statement",
+
+            description: "Description: ",
+            date: "Transaction date: ",
+            balance: "Balance: ",
+            amount: "Amount: ",
+            type: "Type of an operation: "
+        }
+        
+    //CLASSES//////////////////////////////////////////////////////////////////////////////////////////////
+        class LanguageControler {
+            constructor() {
+                this.button = document.getElementById("language");
+                this.storageName = "activeLanguage"
+                this.activeLanguage = localStorage.getItem(this.storageName);
+                this.pl = pl;
+                this.eng = eng;
+
+                this.change;
+
+                this.init();
+            }
+            init = () => {
+                if( !this.activeLanguage ) localSetItem("activeLanguage","eng");
+
+                this.refreshActive();
+
+                this.addListeners();
+            }
+            addListeners = () => {
+                    this.button.addEventListener("change", () =>{
+                        this.changeActiveLanguage();
+
+                        adjustLanguage()
+                    })
+            }
+            refreshActive = () => {
+                this.activeLanguage = localStorage.getItem(this.storageName);
+            }
+            changeActiveLanguage = () => {
+                this.refreshActive();
+
+                if(this.activeLanguage == "pl") {localSetItem(this.storageName, "eng")
+            } else {localSetItem(this.storageName, "pl")};
+
+                this.refreshActive();
+     
+            }
+
+        }
+        //formfield template with input checker
+            //key is for userData object in local storage
+        class FormFieldTemplate {
+            constructor(outputKey, validate = false,
+                {label, type = "text", placeholder,
+                errorMsg = "ERROR", minLength = 6, maxLength = 50}           
+            ) {
+                this.label = label;
+                this.id = outputKey;
+                this.idFormField = this.id + "-FormField";
+                this.type = type;
+                this._placeholder = placeholder;
+                this.placeholder = this.placeholderText();
+                this.errorMsg = errorMsg;
+                
+
+                this.tooltipIcon;
+                this.tooltipList = [];
+                this.input;
+                this.error;
+
+                this.validate = validate;
+                this.validated = false;
+
+                this.minLength = minLength;
+                this.maxLength = maxLength;
+
+                this.formField;
+
+                this.init()
+            }
+            init = () => {
+                this.tooltipListMaker()
+                this.template()
+            }
+            template = () => {
+
+                //BODY OF THE FORM FIELD
+                this.formField = document.createElement("div");
+                this.formField.className = "form-field";
+                this.formField.id = this.idFormField;
+
+                //LABEL
+                const label = document.createElement("label");
+                const labelText = spanLanguageMaker(this.label);
+                label.appendChild(labelText);
+                label.htmlFor = this.id;
+
+                this.formField.appendChild(label);
+
+                //INPUT
+                this.input = document.createElement("input");
+                this.input.placeholder = this.placeholder;
+                this.input.id = this.id;
+                this.input.type = this.type;
+                this.input.maxLength = this.maxLength;
+                this.input.tabIndex = 0;
+
+                const wrapper = document.createElement("div");
+                wrapper.className = "wrapper-input-tooltip";
+                wrapper.appendChild(this.input);
+
+                //TOOLTIP
+                if(this.validate){
+                    this.tooltipIcon = createNode("div", "?");
+                    this.tooltipIcon.className = "tooltipIcon";
+
+                    if(this.tooltipList.length){
+                        const tooltipContainer = document.createElement("div");
+                        tooltipContainer.className = "tooltip-container"
+
+                        this.tooltipList.forEach( t => {
+                            tooltipContainer.appendChild(t)
+                        })
+                        this.tooltipIcon.appendChild(tooltipContainer);
+                        this.tooltipIcon.addEventListener("mouseover", e => {
+                            tooltipContainer.style.visibility = "visible";
+                        });
+                        this.tooltipIcon.addEventListener("mouseleave", e => {
+                            tooltipContainer.style.visibility = "hidden";
+                        });
+                    } else {
+                        this.tooltipIcon.style.color = "transparent";
+                    }
+
+                    
+                    wrapper.appendChild(this.tooltipIcon);
+
+
+                }
+
+                //INPUT-TOOLTIP WRAPPER
+
+                this.formField.appendChild(wrapper);
+
+                //ERROR MSG
+                // const errorMsg = document.createElement("p");
+                this.error = spanLanguageMaker(this.errorMsg);
+                this.error.className = "error-msg";
+                this.error.className += " ERROR";
+                this.error.style.visibility = "hidden"
+                // errorMsg.appendChild(errorText);
+
+                this.formField.appendChild(this.error);
+            }
+
+            placeholderText = () => {
+                const dot ="\u2022";
+                let passwordDots = dot;
+
+                const howManyDots = 12;
+
+                for(let i=0; i<howManyDots; i++) passwordDots += dot;
+                if(this._placeholder === "password") return passwordDots;
+                return this._placeholder;
+            }
+            tooltipListMaker = () => {
+                let listName;
+
+                switch(this.id) {
+                    case "userName":
+                        listName = "tipUser";
+                        break
+                    case "email":
+                        listName = "tipEmail";
+                        break
+                    case "email2":
+
+                        break
+                    case "password":
+                        listName = "tipPassword";
+                        break
+                    default:
+                        listName = false;
+                }
+                if(listName){
+
+                    for( let i = 0; i < pl[listName].length; i++ ) {
+                        const text = spanLanguageMaker(listName, i);
+                        this.tooltipList.push(text)
+                    }
+                }
+            }
+        }
+        //form tamplete
+        class FormTemplate {
+            constructor(title, buttonText, ...forms) {
+                this.formTitle = title;
+                this.forms = forms;
+                this.buttonText = buttonText;
+
+                this.template = document.createElement("form");
+
+                this.button = document.createElement("button")
+                this.init();
+            }
+            init = () => {
+                this.titleTemplate();
+                this.formFields();
+                this.buttonTemplate();
+                this.addListeners();
+
+                if(this.formTitle === "register") this.addRegisterListeners();
+                if(this.formTitle === "login") this.addLoginListeners();
+
+            }
+            titleTemplate = () => {
+                const title = document.createElement("h2");
+                const titleText = spanLanguageMaker(this.formTitle);
+                title.appendChild(titleText);
+
+                this.template.appendChild(title);
+            }
+            formFields = () => {
+                for( let i = 0; i < this.forms.length; i++ ) {
+                    this.template.appendChild(this.forms[i].formField);
+                }
+            }
+            buttonTemplate = () => {
+
+                const buttonText = spanLanguageMaker(this.buttonText);
+                this.button.appendChild(buttonText);
+                
+                
+                this.button.className = "disabled";
+                this.button.disabled = true;
+                
+                this.template.appendChild(this.button);
+
+            }
+            addListeners = () => {
+                this.button.addEventListener("click", e => {
+                    if(this.formTitle === "register") {
+                        this.register()
+                    } else {
+                        this.login()
+                    }
+                })
+            }
+            addLoginListeners = () => {
+                for( let i = 0; i < this.forms.length; i++ ) {
+                    this.forms[i].input.addEventListener("input", e => {
+                        let formsCheck = true;
+                        this.forms.forEach( f => {
+                            if(!f.input.value) formsCheck = false;
+                        })
+                        if(formsCheck) {
+                            this.button.className = "";
+                            this.button.disabled = false;
+                        } else {
+                            this.button.className = "disabled";
+                            this.button.disabled = true;
+                        }
+                        })
+                }
+            }
+            addRegisterListeners = () => {
+                
+                for( let i = 0; i < this.forms.length; i++ ) {
+                    this.forms[i].input.addEventListener("input", e => {
+
+                        if(this.forms[i].id === "email"
+                        && this.forms[i+1].id === "email2") {
+                            this.validateIt(this.forms[i+1]);
+                            this.adjustTip(this.forms[i+1], this.forms[i+1].validated);
+                        };
+                        this.validateIt(this.forms[i]);
+                        this.adjustTip(this.forms[i], this.forms[i].validated)
+
+                        let formsCheck = true;
+                        this.forms.forEach( f => {
+                            if(!f.validated) formsCheck = false;
+                        })
+                        if(formsCheck) {
+                            this.button.className = "";
+                            this.button.disabled = false;
+                        } else {
+                            this.button.className = "disabled";
+                            this.button.disabled = true;
+                        }
+                    })
+                }
+            }
+            validateIt = (form) => {
+                form.validated = false;
+                const v = form.input.value;
+                const id = form.id;
+                const li = form.tooltipList;
+                let checks;
+                
+                switch (id)
+                {
+                    case "userName":
+                        checks = [
+                            this.checkForUnwantedSymbols(v) === 0,
+                            this.countLetters(v) >= form.minLength-1,
+                            this.countNumbers(v) > 0
+                            ]
+                        if(li[0]) {
+                            for( let i = 0; i < checks.length; i++ ) {
+                                if(checks[i]) {li[i].classList.add("ok-text");
+                            } else {li[i].classList.remove("ok-text")};
+                            }
+                        }
+                        if(checks.every(element => element === true)) 
+                            form.validated = true; 
+                        break
+
+                    case "email":
+                        checks = [this.validateEmail(v)]
+                        if(li[0]) {
+                            for( let i = 0; i < checks.length; i++ ) {
+                                if(checks[i]) {li[i].classList.add("ok-text");
+                                } else {li[i].classList.remove("ok-text")};
+                            }
+                        }
+                        if(checks.every(element => element === true)) 
+                            form.validated = true; 
+                        break
+
+                    case "email2":
+                        checks = [
+                            document.getElementById("email").value === v,
+                            document.getElementById("email").value.length > 0
+                            ]
+                        if(li[0]) {
+                            for( let i = 0; i < checks.length; i++ ) {
+                                if(checks[i]) {li[i].classList.add("ok-text");
+                                } else {li[i].classList.remove("ok-text")};
+                            }
+                        }
+                        if(checks.every(element => element === true)) 
+                            form.validated = true;  
+                        break
+
+                    case "password":
+                        checks = [v.length >= form.minLength]
+                        if(li[0]) {
+                            for( let i = 0; i < checks.length; i++ ) {
+                                if(checks[i]) {li[i].classList.add("ok-text");
+                                } else {li[i].classList.remove("ok-text")};
+                            }
+                        }
+                        if(checks.every(element => element === true)) 
+                            form.validated = true;  
+                        if(v.length >= form.minLength) form.validated = true; 
+                        break
+
+                    default:
+                        console.log("ERROR - wrong id")
+                }
+            }
+            countLetters(input) {
+                let newInput;
+
+                newInput = input.toLowerCase()
+                newInput = newInput.replace(/[^a-z]/g, "");
+                
+                return newInput.length;
+            }
+            countNumbers(input) {
+                let newInput = input.replace(/^\D+/g, "");
+                
+                return newInput.length;
+            }
+            checkForUnwantedSymbols(input) {
+                let newInput;
+
+                newInput = input.toLowerCase()
+                newInput = newInput.replace(/[a-z]/g, "");
+                newInput = newInput.replace(/[0-9]/g, "");
+                newInput = newInput.replace(/[\-_[\]/\\]/g, "");
+
+                return newInput.length
+            }
+            validateEmail(email){
+                const reg = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
+                
+                if(reg.test(email)){
+                    return true;
+                }
+                return false;
+            }
+            adjustTip = (form, formValidation) => {
+                
+                if(formValidation) {
+                    form.tooltipIcon.classList.add("ok");
+                    const newSymbol = document.createTextNode("\u2713");
+
+                    form.tooltipIcon.replaceChild(newSymbol, form.tooltipIcon.childNodes[0]);
+
+                } else {
+
+                    const newSymbol = document.createTextNode("?");
+                    form.tooltipIcon.classList.remove("ok");
+                    
+                    form.tooltipIcon.replaceChild(newSymbol, form.tooltipIcon.childNodes[0]);
+                }
+            }
+            register = () => {
+                const userName = document.getElementById("userName").value;
+                const email = document.getElementById("email").value;
+                const password = document.getElementById("password").value;
+                
+                const user = createUser(userName, email, password);
+
+                new FormValidator(user, this.forms, this.formTitle);
+            }
+            login = () => {
+                const userNameEmail = document.getElementById("userNameEmail").value;
+                const password = document.getElementById("password".value);
+
+                const user = {userNameEmail: userNameEmail, password: password};
+
+                new FormValidator(user, this.forms, this.formTitle);
+            }
+        }
+
+        //form validator
+            //action - register or login
+        class FormValidator {
+            constructor( user, forms, action ) {
+                this.user = user;
+                this.action = action;
+                this.forms = forms;
+
+                this.storageLabel = "Accounts";
+
+                this.init();
+            }
+            init = () => {
+                if(!localStorage.getItem(this.storageLabel)) {
+                    console.log("No accounts yet. Creating array");
+                    localSetItem(this.storageLabel, JSON.stringify([]));
+                }
+                if(this.action === "register") this.startRegistration();
+                if(this.action === "login") this.startLoggingIn();
+            }
+            startLoggingIn = () => {
+                this.hideErrors()
+                this.checkForUsers("userNameEmail", "userNameEmail");
+            }
+            startRegistration = () => {
+                this.hideErrors()
+                this.checkForUsers("email", "userName");
+            }
+            hideErrors = () => {
+                this.forms.forEach( f => {
+                    f.error.style.visibility = "hidden";
+                })
+            }
+            checkForUsers = (check1, check2) => {
+                const accounts = localStorage.getItem(this.storageLabel); 
+                const jsonList = JSON.parse(accounts);
+
+                const checkEmail = jsonList.findIndex((account, index) => {
+                    if( account.email == this.user[check1])
+                        return true;
+                })
+                const checkUserNames = jsonList.findIndex((account, index) => {
+                    if( account.userName == this.user[check2])
+                        return true;
+                })
+                if(this.action == "register") {
+                    (checkEmail == -1 || checkUserNames == -1)?
+                        this.register(jsonList) : this.registerError(checkEmail, checkUserNames);
+                }
+                if(this.action == "login") {
+                    (checkEmail > -1 || checkUserNames > -1)?
+                        this.checkPassword(checkEmail, checkUserNames, jsonList) : this.loginError(checkEmail, checkUserNames);
+                }
+            }
+            checkPassword = (checkEmail, checkUserNames, jsonList) => {
+                let index;
+                console.log("3")
+                const passwordToCheck = document.getElementById("password").value;
+
+                (checkEmail > checkUserNames)?
+                    index = checkEmail : index = checkUserNames;
+                
+                const password = jsonList[index].password;
+
+                if(passwordToCheck == password) {
+                    this.setActiveUser(jsonList[index]);
+                } else {
+                    this.loginError(checkEmail, checkUserNames);
+                }
+            }
+            loginError = (checkEmail, checkUserNames) => {
+                let error;
+                let errorMsg;
+                let logintype;
+                const reg = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
+                
+                (reg.test(this.forms[0].input.value)) ?
+                    logintype = "email"
+                    : logintype = "userName";
+                
+                if(checkEmail < 0 && logintype == "email") {
+                    this.forms.forEach( f => {
+                        console.log(f.error)
+                        if(f.id === "userNameEmail") error = f.error;
+                    })
+                    errorMsg = spanLanguageMaker("errorMsgLoginEmail");
+                    error.replaceChild(errorMsg, error.childNodes[0]);
+                    error.style.visibility = "visible";
+                }
+                if(checkUserNames < 0 && logintype == "userName") {
+                    this.forms.forEach( f => {
+                        if(f.id === "password") error = f.error;
+                    })
+                    errorMsg = spanLanguageMaker("errorMsgLoginUserOrPassword");
+                    error.replaceChild(errorMsg, error.childNodes[0]);
+                    error.style.visibility = "visible";
+                }
+            }
+            registerError = (checkEmail, checkUserNames) => {
+                let error;
+
+                if(checkEmail > -1) {
+                    this.forms.forEach( f => {
+                        if(f.id === "email") error = f.error;
+                    })
+                    error.style.visibility = "visible";
+                }
+                if(checkUserNames > -1) {
+                    this.forms.forEach( f => {
+                        if(f.id === "userName") error = f.error;
+                    })
+                    error.style.visibility = "visible";
+                }
+            }
+            async register (jsonList) {
+       
+                this.user.data = await fetchData();
+                if(this.user.data === undefined) {
+                    window.alert("No connection to API, try again latter")
+                    console.log("No connection to API, try again latter")
+                    return
+                }
+                const newList = jsonList.push(this.user);
+
+                localSetItem(this.storageLabel, JSON.stringify(jsonList));
+                this.setActiveUser(this.user);
+            }
+            setActiveUser = (user) => {
+                
+                localSetItem("activeUser", JSON.stringify(user));
+                this.getToContent();
+            }
+            getToContent= () => {
+                new MainViewGenerator("logged");
+            }
+        }
+
+        class TransactionHistoryCell {
+            constructor({date, type, amount, balance, description}) {
+                this.date = date;
+                this.type = type;
+                this.amount = amount + " PLN";
+                this.balance = balance + " PLN";
+                this.description = description;
+
+                this.icons =[
+                    `<svg version="1.1" id="Warstwa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                        viewBox="0 0 296.5 296.5" style="enable-background:new 0 0 296.5 296.5;" xml:space="preserve">
+                    <g>
+                        <path d="M144.4,209.4c6.6,0,13.2-0.3,19.7-0.9c3-6.8,7.6-12.8,13.3-17.5c-10.2,1.8-21.4,2.7-33,2.7c-21,0-40.6-3-55.3-8.5
+                            c-0.1,0-0.2-0.1-0.4-0.1v-28.9c16,5.1,35.9,7.6,55.6,7.6c28.5,0,57.1-5.4,74.2-15.8V171c0,2.4-2.6,5.8-8.2,9.2
+                            c2.8,0.1,5.5,0.5,8.2,1.1c3.6,0.8,7.1,2.1,10.4,3.7c1.8,0.9,3.6,1.9,5.3,3v-17v-45.5V79.9c0-25.2-45.2-38.4-89.9-38.4
+                            S54.5,54.7,54.5,79.9v45.5V171v45.5c0,25.2,45.2,38.4,89.9,38.4c7.7,0,15.5-0.4,23-1.2c-2.9-4.6-5.1-9.7-6.3-15.2
+                            c-5.4,0.4-11,0.7-16.7,0.7c-21,0-40.6-3-55.3-8.5c-0.1,0-0.2-0.1-0.4-0.1v-28.9C104.8,206.9,124.7,209.4,144.4,209.4z M199.7,139.7
+                            c-14.6,5.5-34.3,8.5-55.3,8.5s-40.6-3-55.3-8.5c-0.1,0-0.2-0.1-0.4-0.1v-28.9c16,5.1,35.9,7.6,55.6,7.6c28.5,0,57.1-5.4,74.2-15.8
+                            v22.9C218.6,129.1,212.8,134.9,199.7,139.7z M89.1,65.7c14.6-5.5,34.3-8.5,55.3-8.5s40.6,3,55.3,8.5c13.1,4.9,18.9,10.7,18.9,14.3
+                            c0,3.6-5.9,9.4-18.9,14.3c-14.6,5.5-34.3,8.5-55.3,8.5s-40.6-3-55.3-8.5c-13.1-4.9-18.9-10.7-18.9-14.3
+                            C70.2,76.3,76.1,70.5,89.1,65.7z M70.2,102.6c3.3,2,7.1,3.9,11.2,5.5v28.2c-7.7-4-11.2-8.1-11.2-10.9V102.6z M70.2,148.1
+                            c3.3,2,7.1,3.9,11.2,5.5v28.2c-7.7-4-11.2-8.1-11.2-10.9V148.1z M81.4,227.4c-7.7-4-11.2-8.1-11.2-10.9v-22.9
+                            c3.3,2,7.1,3.9,11.2,5.5V227.4z"/>
+                        <path d="M234.3,206.7c-4-5-9.5-8.8-15.7-10.8c-0.8-0.3-1.7-0.5-2.6-0.7c-2.6-0.6-5.3-1-8.1-1c-10.4,0-19.7,4.7-25.9,12
+                            c-5,5.9-8.1,13.6-8.1,22c0,3.1,0.4,6,1.2,8.8c1.5,5.5,4.3,10.5,8.1,14.5c6.2,6.5,14.9,10.6,24.7,10.6c18.8,0,34-15.2,34-34
+                            C242,220,239.1,212.6,234.3,206.7z M211.7,243.8h-2h-5.4v-12h-7.5h-4.5v-7.3h12v-12h7.3v12h0.7h11.3v7.3h-12v11.1V243.8z"/>
+                    </g>
+                    </svg>`,
+                    `<svg version="1.1" id="Warstwa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                        viewBox="0 0 296.5 296.5" style="enable-background:new 0 0 296.5 296.5;" xml:space="preserve">
+                    <g>
+                        <polygon points="98.2,90 98.2,107.1 235.4,107.1 211.1,167.6 114.7,167.6 114.7,184.7 222.7,184.7 260.7,90 	"/>
+                        <ellipse transform="matrix(0.9732 -0.2298 0.2298 0.9732 -52.8848 28.2495)" cx="94.9" cy="241.2" rx="15.7" ry="15.7"/>
+                        <circle cx="193.1" cy="241.2" r="15.7"/>
+                        <polygon points="190.6,217.5 190.6,200.3 93,200.3 61.2,53.7 33.5,53.7 33.5,70.8 47.4,70.8 79.2,217.5 	"/>
+                    </g>
+                    </svg>`,
+                    `<svg version="1.1" id="Warstwa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                        viewBox="0 0 296.5 296.5" style="enable-background:new 0 0 296.5 296.5;" xml:space="preserve">
+                    <g>
+                        <path d="M206.3,110.4c-10.6-10.7-27.5-25.7-41.2-34.4c12.8-7.5,21.3-22.7,21.3-36.2c0-2,0-8.2-4.8-11.3c-5-3.2-10.6-0.5-16.5,2.2
+                            c-5.1,2.4-10.9,5.2-16.9,5.2s-11.8-2.7-16.9-5.2c-5.9-2.8-11.5-5.4-16.5-2.2c-4.8,3.1-4.8,9.2-4.8,11.3c0,12.5,7.2,26.3,18.3,34.3
+                            c-16.3,7.6-33.1,22.5-45.7,36.7c-23.5,26.7-37.5,56.2-37.5,79c0,24.6,11,42.1,32.7,51.9c16,7.2,37.7,10.5,70.4,10.5
+                            s54.3-3.2,70.4-10.5c21.7-9.8,32.7-27.3,32.7-51.9C251.3,160.3,223.1,127.4,206.3,110.4z M123,41.2c0.9,0.4,1.9,0.9,2.8,1.3
+                            c5.7,2.7,13.6,6.4,22.4,6.4s16.7-3.7,22.4-6.4c0.8-0.4,1.8-0.9,2.7-1.3c-0.9,12.1-12.3,26.5-25.2,26.5S123.9,53.3,123,41.2z
+                            M148.2,235c-61.9,0-86-12.7-86-45.3c0-42.1,59.7-103,85.5-103.7c5.2,1.4,26.4,15.8,48.1,38.2c24.4,25.1,38.3,49,38.3,65.5
+                            C234.2,222.3,210.1,235,148.2,235z"/>
+                        <path d="M152.9,156.3c-12.8-5.3-18.2-9.1-18.2-16.8c0-5.9,4.3-12.6,15.6-12.6c9.4,0,15.4,3.2,18.5,5l3.7-9.7
+                            c-4.3-2.5-10.3-4.8-19.1-5.1v-14.3h-9.1v14.8c-13.5,2.2-22.2,11.5-22.2,23.7c0,12.8,9.3,19.5,24.3,25.4
+                            c10.9,4.4,16.6,9.4,16.6,17.5c0,8.4-7.1,14.4-17.5,14.4c-8.2,0-15.9-2.8-21.2-6.3l-3.5,9.8c5.1,3.7,14,6.3,22.5,6.5v14.8h9.3v-15.3
+                            c15.1-2.5,23.2-13.4,23.2-25C175.6,170.1,168,162.4,152.9,156.3z"/>
+                    </g>
+                    </svg>`,
+                    `<svg version="1.1" id="Warstwa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                        viewBox="0 0 296.5 296.5" style="enable-background:new 0 0 296.5 296.5;" xml:space="preserve">
+                    <g>
+                        <g>
+                            <path d="M128,159.3c1.7,0.2,3.5,0.3,5.2,0.5c5.5,0.4,11.1,0.6,16.7,0.6c5.6,0,11.2-0.2,16.7-0.6c1-0.1,2-0.2,3-0.2c0,0,0,0,0,0
+                                c3-6.8,7.6-12.8,13.3-17.5c-10.2,1.8-21.4,2.7-33,2.7c-21,0-40.6-3-55.3-8.5c-13.1-4.9-18.9-10.7-18.9-14.3
+                                c0-3.6,5.9-9.4,18.9-14.3c14.6-5.5,34.3-8.5,55.3-8.5c21,0,40.6,3,55.3,8.5c13.1,4.9,18.9,10.7,18.9,14.3c0,2.4-2.6,5.8-8.2,9.2
+                                c2.8,0.1,5.5,0.5,8.2,1.1c3.6,0.8,7.1,2.1,10.4,3.7c0,0,0,0,0,0c1.8,0.9,3.6,1.9,5.3,3v-17c0-25.2-45.2-38.4-89.9-38.4
+                                c-44.7,0-89.9,13.2-89.9,38.4v45.5c0,25.2,45.2,38.4,89.9,38.4c7.7,0,15.5-0.4,23-1.2c-2.9-4.6-5.1-9.7-6.3-15.2
+                                c-5.4,0.4-11,0.7-16.7,0.7c-21,0-40.6-3-55.3-8.5c-0.1,0-0.2-0.1-0.4-0.1v-28.9C104.3,155.9,115.9,158.1,128,159.3z M86.9,178.3
+                                c-7.7-4-11.2-8.1-11.2-10.9v-22.9c3.3,2,7.1,3.9,11.2,5.5V178.3z"/>
+                            <path d="M239.8,157.6c-4-5-9.5-8.8-15.7-10.8c-0.8-0.3-1.7-0.5-2.6-0.7c0,0,0,0,0,0c-2.6-0.6-5.3-1-8.1-1
+                                c-10.4,0-19.7,4.7-25.9,12c0,0,0,0,0,0c-5,5.9-8.1,13.6-8.1,22c0,3.1,0.4,6,1.2,8.8c1.5,5.5,4.3,10.5,8.1,14.5
+                                c6.2,6.5,14.9,10.6,24.7,10.6c18.8,0,34-15.2,34-34C247.4,170.9,244.6,163.5,239.8,157.6z M197.9,182.7v-7.3h20h11.3v7.3h-26.7
+                                H197.9z"/>
+                        </g>
+                    </g>
+                    </svg>`
+                ]
+                this.icon = this.icons[type - 1]
+                this.cell = document.createElement("div");
+
+                this.init()
+            }
+            init = () => {
+                console.log(this.type)
+                this.template()
+            }
+            template = () => {
+                const icon = createNode("svg", "", "icon");
+                icon.innerHTML = this.icon;
+
+                const date = spanLanguageMaker("date")
+                date.appendChild(createNode("br"));
+                date.appendChild(createNode("span", this.date));
+                date.className = "date mobile-hidden";
+
+                const amount = createNode("span", this.amount, "amount");
+
+                const balance = spanLanguageMaker("balance")
+                balance.appendChild(createNode("br"));
+                balance.appendChild(createNode("span", this.balance));
+                balance.className = "balance mobile-hidden";
+
+                const description = spanLanguageMaker("description")
+                description.appendChild(createNode("br"));
+                description.appendChild(createNode("span", this.description));
+
+                
+                const type = spanLanguageMaker("type");
+                const typePL = createNode("span", transacationTypes[this.type][0], "pl");
+                const typeENG = createNode("span", transacationTypes[this.type][1], "eng");
+                type.appendChild(typePL);
+                type.appendChild(typeENG);
+                type.className = "mobile-hidden type";
+                const descriptionContainer = createNode("span", "", "description grid")
+                descriptionContainer.appendChild(description);
+                descriptionContainer.appendChild(type);
+ 
+                this.cell.appendChild(icon);
+                this.cell.appendChild(date);
+                this.cell.appendChild(amount);
+                this.cell.appendChild(balance);
+                this.cell.appendChild(descriptionContainer);
+                this.cell.className = "transaction-cell";
+                this.cell.tabIndex = 0;
+            }
+        }
+
+
+        class LoggedView {
+            constructor() {
+                this._data = JSON.parse(localStorage.getItem("activeUser"));
+                this.data = this._data.data;
+
+                this.chartCircle;
+                this.chartBar;
+                this.historyContent;
+
+                this.template;
+                this.chartCircleCanv = createNode("canvas");
+                this.chartBarCanv = createNode("canvas");
+                this.cellList = [];
+
+                this.init()
+            }
+            init = () => {
+                this.templateMaker()
+                this.chartCircleMaker()
+                this.chartBarMaker()
+                this.transactionsSort()
+            }
+            templateMaker() {
+                this.chartCircleCanv.id = "chartCircle";
+                this.chartBarCanv.id = "chartBar";
+                // // container
+                this.template = createNode("div");
+                this.template.className = "logged-window";
+                // buttons
+                const checkbox = createNode("input");
+                checkbox.type = "checkbox";
+                checkbox.style.display ="none";
+                checkbox.id = "chart-changer-mobile";
+                const buttonChart1 = createNode("label", "", "chart-button active");
+                buttonChart1.htmlFor = "chart-changer-mobile";
+                buttonChart1.appendChild(spanLanguageMaker("chartCircleBtn"))
+                const buttonChart2 = createNode("label", "", "chart-button");
+                buttonChart2.htmlFor = "chart-changer-mobile";
+                buttonChart2.appendChild(spanLanguageMaker("chartBarBtn"))
+
+                this.template.appendChild(checkbox);
+                this.template.appendChild(buttonChart1);
+                this.template.appendChild(buttonChart2);
+                let ch = true;
+                checkbox.onchange = function() {
+                    (ch) ? ch = false : ch = true;
+                    console.log(ch)
+                    buttonChart1.classList.remove("active");
+                    buttonChart2.classList.remove("active");
+                    (ch) ?
+                        buttonChart1.classList.add("active")
+                        : buttonChart2.classList.add("active")
+                    if(ch) {
+                        chartContainer1.classList.remove("hide");
+                        chartContainer2.classList.add("hide");
+                    } else {
+                        chartContainer1.classList.add("hide");
+                        chartContainer2.classList.remove("hide");
+                    }
+                }
+                // // charts
+                const chartContainer1 = createNode("div", "", "flex-center chart1");
+                const chartContainer2 = createNode("div", "", "flex-center chart2 hide");
+                chartContainer1.appendChild(this.chartCircleCanv);
+                chartContainer2.appendChild(this.chartBarCanv);
+
+                this.template.appendChild(chartContainer1);
+                this.template.appendChild(chartContainer2);
+
+                // //transaction history
+                const historyWindow = createNode("div","","history-window");
+                historyWindow.className = "history-window";
+
+                this.historyContent = createNode("div", "", "history-content");
+
+                historyWindow.appendChild(this.historyContent);
+                this.template.appendChild(historyWindow);
+            }
+            chartCircleMaker = () => {
+                const data = this.prepereChartData("chartCircle", this.data);
+                const xValues = data.labels;
+                const yValues = data.data;
+                const barColors = ["green", "brown","darkgreen","rgb(207, 0, 0)"];
+
+                this.chartCircle = new Chart(this.chartCircleCanv, {
+                    type: 'doughnut',
+                    data: {
+                        labels: xValues,
+                        datasets: [{
+                            data: yValues,
+                            hoverOffset: 10,
+                            backgroundColor: barColors,
+                        }]
+                    },
+                    options: {
+                        layout: {
+                            padding: 10
+                        },
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                enabled: true,
+                                intersect: false,
+                                mode: 'nearest',
+                                callbacks: {
+                                    label: (context) => " " + context.parsed + '%'
+                                },
+                            },
+                            legend: {
+                                display: true,
+                                position: "left",
+                                labels: {
+                                    render: "label",
+                                    boxWidth: 12,
+                                    borderRadius: 5
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            chartBarMaker = () => {
+                const data = this.prepereChartData("chartBar", this.data);
+                const xValues = data.labels;
+                const yValues = data.data;
+                const barPositive = "green";
+                const barNegative = "brown";
+                this.chartBar = new Chart(this.chartBarCanv, {
+                    type: "bar",
+                    data: {
+                        labels: xValues,
+                        datasets: [{
+                            label: " saldo: ",
+                            data: yValues,
+                            backgroundColor: (context) => {
+                                return (context.raw < 0) ? barNegative : barPositive;
+                            },
+                            maxBarThickness: 50
+                        }]
+                    },
+                    options: {
+                        layout: {
+                            padding: 10
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    color: "transparent"
+                                }
+                            },
+                            y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: (context) => {
+                                    if(context.tick.value === 0) return "red";
+                                    return "gray";
+                                }
+                            }
+                            },
+                        },
+                        plugins: {
+                            tooltip: {
+                                enabled: true,
+                                intersect: false,
+                                mode: 'nearest',
+                                title: "",
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.dataset.label;
+                                        const value = context.formattedValue;
+                                        return  label + value + " PLN";
+                                    }   
+                                }
+                            },
+                            legend: {
+                                display: false,
+                                // position: "top"
+                            }
+                        },
+                    }
+                });
+            }
+
+            prepereChartData(chart, data) {
+                const t = data.transactions;
+                if(chart === "chartCircle"){ 
+                
+                    let typeCount = [0, 0, 0, 0];
+                    let typeOne = 0;
+                    let typeTwo = 0;
+                    let typeThree = 0;
+                    let typeFour = 0;
+
+                    const labels = Object.values(data.transacationTypes);
+                    
+                    for( let i = 0; i < data.transactions.length; i++ ) {
+
+                        typeCount[data.transactions[i].type - 1] ++
+                    }
+                    return {
+                        labels: labels,
+                        data: arrayToProc(typeCount)
+                    }
+                }
+                if(chart === "chartBar") {
+
+                    let labels = [];
+                    let balance = []
+
+                    for( let i = 0; i < t.length; i++ ) {
+                        let same = true;
+                        for( let x = 0; x < labels.length; x++ ) {
+                            if(t[i].date === labels[x]) {
+                                same = false;
+                                break;
+                            }
+                        }
+                        if(same === true) {
+                            labels.push(t[i].date);
+                            balance.push(t[i].balance);
+                            // console.log(balance)
+                        }
+                        
+                    }
+                return {
+                    labels: labels,
+                    data: balance
+                }
+            }
+        }
+
+            transactionsSort = () => {
+                let transactions = this.data.transactions
+                let sortedByDate = [];
+                let dateList = [];
+                
+                transactions.forEach( t => {
+                    if(!dateList.includes(t.date)) {
+                        dateList.push(t.date);
+                    }
+                });
+
+                let group;
+                dateList.forEach( d => {
+                    group = []
+                    transactions.forEach( t => {
+                        if(t.date === d) group.push(t);
+                    });
+                    sortedByDate.push(group);
+                })
+                
+                this.transactionsTemplate(sortedByDate);
+            }
+            transactionsTemplate(sortedData) {
+                                // console.log(sortedData) 
+                sortedData.forEach( s => {
+                    const container = createNode("div");
+                    const date = createNode("h3", s[0].date, "desktop-hidden")
+                    container.appendChild(date);
+
+                    s.forEach( x => {
+                        const date = x.date;
+                   
+                        const type = x.type;
+                        
+                        const amount = x.amount;
+                       
+                        const balance = x.balance;
+                   
+                        const description = x.description;
+                    
+                        const cell = new TransactionHistoryCell({date, type, amount, balance, description}).cell;
+                        container.appendChild(cell)
+                    });
+                    this.historyContent.appendChild(container);
+                });
+            }
+        }
+        
+        
+        //constrols what is shown/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        class MainViewGenerator {
+            constructor(
+                request
+            )
+            {
+                this.logged;
+                this.location = document.getElementById("contentLocation")
+                this.request = request
+                
+                this.init()
+            }
+
+            init = () => {
+                this.location.addEventListener("submit", (e) => {
+                            e.preventDefault()
+                        })
+                switch (this.request) 
+                {
+                    case "loginForm"://////////////////////////////////////////////////////////////////////////////////
+                    this.location.innerHTML = "";
+                    this.location.appendChild(login.template);
+
+                    break
+
+                    case "registerForm"://////////////////////////////////////////////////////////////////////////////
+                    this.location.innerHTML = "";
+                    this.location.appendChild(register.template);
+
+                    break
+
+                    case "logged":////////////////////////////////////////////////////////////////////////////////////
+                    this.location.innerHTML = "";
+                    this.logged = new LoggedView();
+                    this.location.appendChild(this.logged.template);
+
+                    break
+                    
+                    default://///////////////////////////////////////////////////////////////////////////////////////
+                    this.location.innerHTML = "";
+                }
+                this.navUpdate();
+                adjustLanguage();
+                addSemantic();
+            }
+            navUpdate = () => {
+                const loginBtn = document.getElementById("login");
+                const registerBtn = document.getElementById("register");
+                const logoutBtn = document.getElementById("logout");
+
+                switch (this.request){
+                    case "loginForm":
+                        loginBtn.style.display = "none";
+                        registerBtn.style.display = "block";
+                        logoutBtn.style.display = "none";
+                    break
+
+                    case "registerForm":
+                        loginBtn.style.display = "block";
+                        registerBtn.style.display = "none";
+                        logoutBtn.style.display = "none";
+                    break
+
+                    case "logged":
+                        loginBtn.style.display = "none";
+                        registerBtn.style.display = "none";
+                        logoutBtn.style.display = "block";
+                    break
+                    
+                    default:
+                        loginBtn.style.display = "block";
+                        registerBtn.style.display = "block";
+                        logoutBtn.style.display = "none";
+                }
+            }
+        }
+        //form sets
+        const register = new FormTemplate( "register", "signInBtn", 
+            new FormFieldTemplate(
+                        "userName",
+                        true,
+                        {
+                        label: "userName",
+                        type: "text",
+                        placeholder: "Guest-1",
+                        errorMsg: "errorMsgUser",
+                        maxLength: 16
+                        }),
+            new FormFieldTemplate(
+                        "email",
+                        true,
+                        {
+                        label: "email",
+                        type: "email",
+                        placeholder: "guest@gmail.com",
+                        errorMsg: "errorMsgEmail",
+                        }),
+            new FormFieldTemplate(
+                        "email2",
+                        true,
+                        {
+                        label: "repeatEmail",
+                        type: "email",
+                        placeholder: "",
+                        errorMsg: "errorMsgEmail2",
+                        }),
+            new FormFieldTemplate(
+                        "password",
+                        true,
+                        {
+                        label: "password",
+                        type: "password",
+                        placeholder: "password",
+                        errorMsg: "blank",
+                        })
+            );
+                    
+        const login = new FormTemplate( "login", "loginBtn", 
+            new FormFieldTemplate(
+                        "userNameEmail",
+                        false,
+                        {
+                        label: "userNameEmail",
+                        type: "text",
+                        placeholder: "Guest-1",
+                        errorMsg: "blank",
+                        }),
+
+            new FormFieldTemplate(
+                        "password",
+                        false,
+                        {
+                        label: "password",
+                        type: "password",
+                        placeholder: "password",
+                        errorMsg: "blank",
+                        })
+            );
+        var view = new MainViewGenerator("")
+        //FUNCTIONS/////////////////////////////////////////////////////////////////////////////////////////////
+        function MainViewControler() {
+
+            (localStorage.getItem("activeUser"))?
+                view = new MainViewGenerator("logged") : view = new MainViewGenerator("");
+
+            document.getElementById("login").addEventListener("click", function() {
+                view = new MainViewGenerator("loginForm")
+
+            })
+            document.getElementById("register").addEventListener("click", function() {
+                view = new MainViewGenerator("registerForm")
+
+            })
+            document.getElementById("logout").addEventListener("click", function() {
+                view = new MainViewGenerator("")
+                localStorage.removeItem("activeUser");
+            })
+        }
+        
+        
+        function deleteLocalValue(value) {
+            localStorage.removeItem(value);
+        }
+        function spanLanguageMaker(languageVariable, i) {
+            let plText = pl[languageVariable];
+            let engText = eng[languageVariable];
+
+            if(i !== undefined) {
+                plText = plText[i];
+                engText = engText[i];
+            }
+
+            const span = document.createElement("span");
+
+            const spanPl = document.createElement("span");
+            const textPl = document.createTextNode(plText);
+            spanPl.appendChild(textPl);
+            spanPl.className = "pl";
+
+            const spanEng = document.createElement("span");
+            const textEng = document.createTextNode(engText);
+            spanEng.appendChild(textEng);
+            spanEng.className = "eng";
+            
+            span.appendChild(spanPl);
+            span.appendChild(spanEng);
+
+            return span;
+        }
+        function spanResponsiveMaker(languageVariable, i) {
+            let plText = pl[languageVariable];
+            let engText = eng[languageVariable];
+
+            if(i !== undefined) {
+                plText = plText[i];
+                engText = engText[i];
+            }
+
+            const span = document.createElement("span");
+
+            const spanPl = document.createElement("span");
+            const textPl = document.createTextNode(plText);
+            spanPl.appendChild(textPl);
+            spanPl.className = "pl";
+
+            const spanEng = document.createElement("span");
+            const textEng = document.createTextNode(engText);
+            spanEng.appendChild(textEng);
+            spanEng.className = "eng";
+            
+            span.appendChild(spanPl);
+            span.appendChild(spanEng);
+
+            return span;
+        }
+        function adjustLanguage() {
+            const pl = document.querySelectorAll(".pl");
+            const eng = document.querySelectorAll(".eng");
+
+            let newLanguage;
+            let previousLanguage;
+            let chartLanguageIndex;
+
+            if(localStorage.getItem("activeLanguage") == "pl") {
+                newLanguage = pl;
+                previousLanguage = eng;
+                chartLanguageIndex = 0
+                } else {
+                newLanguage = eng;
+                previousLanguage = pl;
+                chartLanguageIndex = 1;
+            }
+            
+            for( let i = 0; i < previousLanguage.length; i++ ) {
+                previousLanguage[i].style.display = "none";
+
+            }
+
+            for( let i = 0; i < newLanguage.length; i++ ) {
+                newLanguage[i].style.display = "inline-block";
+            }
+            if( document.getElementById("chartCircle") ) {
+                let labels = [];
+
+                for( let i = 0; i < Object.keys(transacationTypes).length; i++ ){
+                    let x = i + 1;
+                    labels.push(transacationTypes[x][chartLanguageIndex])           
+                }
+                if(view.request == "logged") {
+                    view.logged.chartCircle.data.labels = labels;
+                    view.logged.chartCircle.update()
+                }
+            }
+        }
+
+        function arrayToProc(array) {
+            let count = 0;
+            for( let i = 0; i < array.length; i++ ) {
+                count += array[i];
+            }
+            const newArray = array.map((num) => {
+                return Math.round(num * 100 / count);
+            })
+
+            return newArray
+        }
+        function addSemantic() {
+            const elements = document.querySelectorAll("[tabindex]");
+            const buttons = document.querySelectorAll("button");
+
+            for( let i = 0; i < elements.length; i++ ) {
+                
+                elements[i].addEventListener("keydown", (k) => {
+                    
+                    if(k.keyCode === 37 || k.keyCode === 38) {
+                        elements[i - 1].focus()
+                        console.log(i - 1)
+                    };  
+                    if(k.keyCode === 39 || k.keyCode === 40) {
+                        elements[i + 1].focus()
+                        console.log(i + 1)
+                    };
+                     
+                })
+            }
+            buttons.forEach( (e) => {
+                e.onclick = e.blur();
+            })
+        }
+
+        function localSetItem(itemName, itemValue) {
+            localStorage.setItem(itemName, itemValue);
+        }
+
+        function themeClicker() {
+            const switcher = document.getElementById("theme");
+
+            let darkMode = localStorage.getItem("theme");
+
+            if(darkMode) {
+                themeSwitcher("dark");
+            }
+
+            switcher.addEventListener("change", function() {
+                darkMode = localStorage.getItem("theme");
+                if(!darkMode){
+                    localSetItem("theme", "darkMode");
+                    themeSwitcher("dark");
+                } else {
+                    localStorage.removeItem("theme");
+                    themeSwitcher("light");
+                }
+            })
+        }
+        function themeSwitcher(theme) {
+            const switcherIcon = document.getElementById("theme-moon");
+            
+
+            if(theme === "light") {
+                document.body.classList.remove("darktheme");
+                switcherIcon.style.transform = "translate(-50%, -50%)";
+                switcherIcon.style.top = "50%";
+                switcherIcon.style.left = "50%";
+            };
+            if(theme === "dark") {
+                document.body.classList.add("darktheme");
+                switcherIcon.style.transform = "translate(-5%, -50%)";
+                switcherIcon.style.top = "45%";
+                switcherIcon.style.left = "45%";
+            };
+        }
+        function createNode(nodeType, text, classname) {
+            const element = document.createElement(nodeType);
+            if(text) {
+                const elementText = document.createTextNode(text);
+                element.appendChild(elementText);
+            }
+            if(classname) {
+                element.className = classname;
+            }
+            return element;
+        }
+        function createUser (userName, email, password) {
+            return {
+                userName: userName,
+                email: email,
+                password: password,
+            }
+        }
+        async function fetchData() {
+            const dataUrl = "https://api.npoint.io/38edf0c5f3eb9ac768bd";
+            let data;
+
+                try {
+                    data = await fetch(dataUrl)
+                    data = data.json()
+
+                } catch(error) {
+                    console.log(error)
+                }    
+                console.log(data)
+                    return data     
+        }
+
+        // STORY
+        const language = new LanguageControler()
+        themeClicker()
+        MainViewControler()
+
+
+    </script>
+</body>
+</html>
